@@ -15,11 +15,19 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// CLIENT
 Route::get('client', 'ClientController@index');
 Route::get('client/{id}', 'ClientController@show');
 Route::post('client', 'ClientController@store');
 Route::delete('client/{id}', 'ClientController@destroy');
 Route::put('client/{id}', 'ClientController@update');
+
+//PROJECT
+Route::get('project', 'ProjectController@index');
+Route::get('project/{id}', 'ProjectController@show');
+Route::post('project', 'ProjectController@store');
+Route::delete('project/{id}', 'ProjectController@destroy');
+Route::put('project/{id}', 'ProjectController@update');
 
 /*
 |--------------------------------------------------------------------------
