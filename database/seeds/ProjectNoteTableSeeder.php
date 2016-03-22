@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class ClientTableSeeder extends Seeder
+class ProjectNoteTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -13,6 +13,6 @@ class ClientTableSeeder extends Seeder
     {
         //
 
-        factory(\CodeProject\Entities\Client::class, 50)->create();
+        factory(\CodeProject\Entities\ProjectNote::class, 50)->create();
     }
 }

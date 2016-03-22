@@ -13,7 +13,6 @@ class UserTableSeeder extends Seeder
     {
         //
 
-    	\CodeProject\Entities\User::truncate();
         factory(\CodeProject\Entities\User::class, 50)->create();
     }
 }

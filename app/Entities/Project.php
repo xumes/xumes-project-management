@@ -15,4 +15,9 @@ class Project extends Model
         'due_date'
     ];
 
+    public function notes()
+    {
+        return $this->hasMany(ProjectNote::class);
+    }
+
 }
