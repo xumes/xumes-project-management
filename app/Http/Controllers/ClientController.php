@@ -5,6 +5,7 @@ namespace CodeProject\Http\Controllers;
 use CodeProject\Repositories\ClientRepository;
 use CodeProject\Services\ClientService;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class ClientController extends Controller
 {
@@ -36,11 +37,22 @@ class ClientController extends Controller
     public function store(Request $request)
     {
     	return $this->service->create($request->all());
+
     }
 
     public function show($id)
     {
-    	return $this->repository->find($id);
+
+        try {
+            $client = $this->repository->find($id);
+            return ['success'=>true, $client];
+        } catch (QueryException $e) {
+            return ['error'=>true, 'To be defined.'];
+        } catch (ModelNotFoundException $e) {
+            return ['error'=>true, 'Client not found.'];
+        } catch (\Exception $e) {
+            return ['error'=>true, 'Client not found.'];
+        }
     }
 
     /**
@@ -48,7 +60,17 @@ class ClientController extends Controller
      */
     public function destroy($id)
     {
-       return $this->repository->delete($id);
+
+        try {
+            $this->repository->delete($id);
+            return ['success'=>true, 'Client deleted successfully!'];
+        } catch (QueryException $e) {
+            return ['error'=>true, 'Client could not be deleted. There are projects related to him.'];
+        } catch (ModelNotFoundException $e) {
+            return ['error'=>true, 'Client not fount.'];
+        } catch (\Exception $e) {
+            return ['error'=>true, 'Sorry, there is an error when try to delete this client.'];
+        }
     }
 
     public function update(Request $request, $id)

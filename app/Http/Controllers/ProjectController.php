@@ -35,7 +35,17 @@ class ProjectController extends Controller
 
     public function show($id)
     {
-        return $this->repository->find($id);
+
+        try {
+            $project = $this->repository->find($id);
+            return ['success'=>true, $project];
+        } catch (QueryException $e) {
+            return ['error'=>true, 'To be defined.'];
+        } catch (ModelNotFoundException $e) {
+            return ['error'=>true, 'Project not found.'];
+        } catch (\Exception $e) {
+            return ['error'=>true, 'Project not found.'];
+        }
     }
 
     public function store(Request $request)
@@ -51,6 +61,16 @@ class ProjectController extends Controller
 
     public function destroy($id)
     {
-        return $this->repository->delete($id);
+
+        try {
+            $this->repository->delete($id);
+            return ['success'=>true, 'Project deleted successfully!'];
+        } catch (QueryException $e) {
+            return ['error'=>true, 'Project could not be deleted. There are projects related to him.'];
+        } catch (ModelNotFoundException $e) {
+            return ['error'=>true, 'Project not fount.'];
+        } catch (\Exception $e) {
+            return ['error'=>true, 'Sorry, there is an error when try to delete this project.'];
+        }
     }
 }
