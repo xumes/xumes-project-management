@@ -23,5 +23,8 @@ class ProjectRepositoryEloquent extends BaseRepository implements ProjectReposit
         return Project::class;
     }
 
+    public function isOwner($id, $userId){
+
+    }
 
 }
