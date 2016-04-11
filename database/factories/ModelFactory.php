@@ -51,3 +51,11 @@ $factory->define(CodeProject\Entities\ProjectNote::class, function (Faker\Genera
         'Note' => $faker->paragraph
     ];
 });
+
+$factory->define(CodeProject\Entities\ProjectNote::class, function (Faker\Generator $faker) {
+    return [
+        'project_id' => rand(1, 50),
+        'Title' => $faker->word,
+        'Note' => $faker->paragraph
+    ];
+});
