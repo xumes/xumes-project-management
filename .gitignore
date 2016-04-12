@@ -1,5 +1,8 @@
+.idea/workspace.xml
 /vendor
 /node_modules
 Homestead.yaml
 Homestead.json
 .env
+resources/bower_components
+.bowerrc
