@@ -3,23 +3,15 @@ namespace CodeProject\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Project extends Model
+
+class ProjectMember extends Model
 {
+
     protected $fillable = [
-        'owner_id',
-        'client_id',
-        'name',
-        'description',
-        'progress',
-        'status',
-        'due_date'
+        'project_id',
+        'user_id',
+
     ];
 
-
-
-    public function notes()
-    {
-        return $this->hasMany(ProjectNote::class);
-    }
 
 }

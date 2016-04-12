@@ -27,9 +27,9 @@ Route::group(['middleware' => 'oauth'], function(){
     Route::resource('client', 'ClientController', ['except' => ['create', 'edit']]);
 
     //PROJECT
-    Route::group(['middleware'=>'CheckProjectOwner'], function() {
+    //Route::group(['middleware'=>'CheckProjectOwner'], function() {     //no longer using middleware to check the project owner
         Route::resource('project', 'ProjectController', ['except' => ['create', 'edit']]);
-    });
+    //});
 
 
     Route::group(['prefix'=>'project'], function(){
@@ -40,6 +40,8 @@ Route::group(['middleware' => 'oauth'], function(){
         Route::post('{id}/note/', 'ProjectNoteController@store');
         Route::put('{id}/note/{noteId}', 'ProjectNoteController@update');
         Route::delete('{id}/note/{noteId}', 'ProjectNoteController@destroy');
+
+        Route::post('{id}/file', 'ProjectFileController@store');
     });
 
 });
