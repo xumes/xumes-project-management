@@ -22,7 +22,7 @@ class ProjectController extends Controller
      */
     public function __construct(ProjectRepository $repository, ProjectService $service)
     {
-        $this->repository=$repository;
+        $this->repository = $repository;
         $this->service = $service;
     }
 
@@ -41,20 +41,20 @@ class ProjectController extends Controller
     public function show($id)
     {
 
-        if ($this->checkProjectOwner($id) == false)
-        {
-            return ['error'=> 'Access Forbidden'];
+        if ($this->checkProjectPermissions($id) == false) {
+            return ['error' => 'Access Forbidden'];
         }
+
 
         try {
             $project = $this->repository->find($id);
-            return ['success'=>true, $project];
+            return ['success' => true, $project];
         } catch (QueryException $e) {
-            return ['error'=>true, 'To be defined.'];
+            return ['error' => true, 'To be defined.'];
         } catch (ModelNotFoundException $e) {
-            return ['error'=>true, 'Project not found.'];
+            return ['error' => true, 'Project not found.'];
         } catch (\Exception $e) {
-            return ['error'=>true, 'Project not found.'];
+            return ['error' => true, 'Project not found.'];
         }
     }
 
@@ -65,9 +65,8 @@ class ProjectController extends Controller
 
     public function update(Request $request, $id)
     {
-        if ($this->checkProjectOwner($id) == false)
-        {
-            return ['error'=> 'Access Forbidden'];
+        if ($this->checkProjectOwner($id) == false) {
+            return ['error' => 'Access Forbidden'];
         }
 
         $this->service->update($request->all(), $id);
@@ -77,20 +76,19 @@ class ProjectController extends Controller
     public function destroy($id)
     {
 
-        if ($this->checkProjectOwner($id) == false)
-        {
-            return ['error'=> 'Access Forbidden'];
+        if ($this->checkProjectOwner($id) == false) {
+            return ['error' => 'Access Forbidden'];
         }
 
         try {
             $this->repository->delete($id);
-            return ['success'=>true, 'Project deleted successfully!'];
+            return ['success' => true, 'Project deleted successfully!'];
         } catch (QueryException $e) {
-            return ['error'=>true, 'Project could not be deleted. There are projects related to him.'];
+            return ['error' => true, 'Project could not be deleted. There are projects related to him.'];
         } catch (ModelNotFoundException $e) {
-            return ['error'=>true, 'Project not fount.'];
+            return ['error' => true, 'Project not fount.'];
         } catch (\Exception $e) {
-            return ['error'=>true, 'Sorry, there is an error when try to delete this project.'];
+            return ['error' => true, 'Sorry, there is an error when try to delete this project.'];
         }
     }
 
@@ -102,8 +100,25 @@ class ProjectController extends Controller
     {
         $userId = \Authorizer::getResourceOwnerId();
 
-         return $this->repository->isOwner($projectId, $userId) ;
+        return $this->repository->isOwner($projectId, $userId);
 
     }
+
+    private function checkProjectMember($projectId)
+    {
+        $userId = \Authorizer::getResourceOwnerId();
+
+        return $this->repository->hasMember($projectId, $userId);
+    }
+
+    private function checkProjectPermissions($projectId)
+    {
+        if ($this->checkProjectOwner($projectId) || $this->checkProjectMember($projectId)) {
+            return true;
+        }
+
+        return false;
+    }
+
 
 }
