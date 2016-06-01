@@ -93,4 +93,27 @@ class ProjectService
 
         $this->storage->put($projectFile->id.".".$data['extension'], $this->filesystem->get($data['file']));
     }
+
+    public function addMember($project_id, $member_id)
+    {
+        $project = $this->repository->find($project_id);
+        if(!$this->isMember($project_id, $member_id)){
+            $project->members()->attach($member_id);
+        }
+        return $project->members()->get();
+    }
+    public function removeMember($project_id, $member_id)
+    {
+        $project = $this->repository->find($project_id);
+        $project->members()->detach($member_id);
+        return $project->members()->get();
+    }
+    public function isMember($project_id, $member_id)
+    {
+        $project = $this->repository->find($project_id)->members()->find(['user_id' => $member_id]);
+        if(count($project)){
+            return true;
+        }
+        return false;
+    }
 }
