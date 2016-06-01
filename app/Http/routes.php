@@ -15,7 +15,7 @@ use Illuminate\Http\Response;
 use LucaDegasperi\OAuth2Server\Facades\Authorizer;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('app');
 });
 
 Route::post('oauth/access_token', function() {

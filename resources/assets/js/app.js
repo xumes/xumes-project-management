@@ -1,0 +1,18 @@
+/**
+ * Created by Reginaldo on 17/04/2016.
+ */
+var app = angular.module('app', ['ngRoute','app.controllers']);
+
+angular.module('app.controllers', []);
+
+app.config(function($routeProvider){
+   $routeProvider
+       .when('/login', {
+           templateUrl: 'build/views/login.html',
+           controller: 'loginController'
+       })
+       .when('/home', {
+           templateUrl: 'build/views/home.html',
+           controller: 'homeController'
+       })
+});
