@@ -29,6 +29,13 @@ Route::group(['middleware' => 'oauth'], function(){
     //PROJECT
     //Route::group(['middleware'=>'CheckProjectOwner'], function() {     //no longer using middleware to check the project owner
         Route::resource('project', 'ProjectController', ['except' => ['create', 'edit']]);
+
+        Route::get('project/{id}/member', 'ProjectController@members');
+        Route::post('project/{id}/member/{member_id}', 'ProjectController@addMember');
+        Route::delete('project/{id}/member/{member_id}', 'ProjectController@removeMember');
+        Route::get('project/{id}/task', 'ProjectController@tasks');
+        Route::post('project/{id}/task', 'ProjectController@addTask');
+        Route::delete('project/{id}/task/{task_id}', 'ProjectController@removeTask');
     //});
 
 
