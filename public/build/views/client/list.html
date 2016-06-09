@@ -1,0 +1,39 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">Clients list</div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Responsible</th>
+                                <th>E-mail<th>
+                                <th>Phone</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="cli in clients">
+                                <td>{{cli.name}}</td>
+                                <td>{{cli.responsible}}</td>
+                                <td>{{cli.email}}<td>
+                                <td>{{cli.phone}}</td>
+                                <td>
+                                    <a ng-href="#/clients/{{cli.id}}/edit">
+                                        <i class="fa fa-2x fa-pencil-square-o" aria-hidden="true"></i>
+                                    </a>
+                                    <a ng-href="#/clients/{{cli.id}}/remove">
+                                        <i class="fa fa-2x fa-trash" aria-hidden="true"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -8,12 +8,14 @@
 	@if(Config::get('app.debug'))
 		<link href="{{ asset('build/css/vendor/bootstrap.min.css') }}" rel="stylesheet"/>
 		<link href="{{ asset('build/css/vendor/bootstrap-theme.min.css') }}" rel="stylesheet"/>
+		<link href="{{ asset('build/css/vendor/font-awesome.min.css') }}" rel="stylesheet"/>
 	@else
 		<link href="{{ elixir('css/all.css') }}" rel="stylesheet"/>
 	@endif
 
 	<!-- Fonts -->
 	<link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
+	<link href='https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
 
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -81,8 +83,18 @@
 		<script src="{{asset('build/js/vendor/angular-oauth2.min.js')}}"></script>
 
 		<script src="{{asset('build/js/app.js')}}"></script>
+
+		<!-- Controllers -->
 		<script src="{{asset('build/js/controllers/login.js')}}"></script>
 		<script src="{{asset('build/js/controllers/home.js')}}"></script>
+		<script src="{{asset('build/js/controllers/client/clientList.js')}}"></script>
+		<script src="{{asset('build/js/controllers/client/clientNew.js')}}"></script>
+		<script src="{{asset('build/js/controllers/client/clientEdit.js')}}"></script>
+		<script src="{{asset('build/js/controllers/client/clientRemove.js')}}"></script>
+
+		<!-- Services -->
+		<script src="{{asset('build/js/services/client.js')}}"></script>
+
 	@else
 		<script src="{{elixir('js/all.js')}}"></script>
 	@endif

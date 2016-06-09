@@ -33,6 +33,18 @@ config.build_vendor_path_css = config.build_path_css + '/vendor';
 config.vendor_path_css = [
     config.bower_path + '/bootstrap/dist/css/bootstrap.min.css',
     config.bower_path + '/bootstrap/dist/css/bootstrap-theme.min.css',
+    config.bower_path + '/font-awesome/css/font-awesome.min.css',
+];
+
+config.build_path_fonts = config.build_vendor_path_css + '/fonts';
+config.build_vendor_path_fonts = config.build_path_fonts ;
+config.vendor_path_fonts = [
+    config.bower_path + '/font-awesome/fonts/fontAwesome.otf',
+    config.bower_path + '/font-awesome/fonts/fontAwesome-webfont.eot',
+    config.bower_path + '/font-awesome/fonts/fontAwesome-webfont.svg',
+    config.bower_path + '/font-awesome/fonts/fontAwesome-webfont.ttf',
+    config.bower_path + '/font-awesome/fonts/fontAwesome-webfont.woff',
+    config.bower_path + '/font-awesome/fonts/fontAwesome-webfont.woff2',
 ];
 
 config.build_path_html = config.build_path + '/views';
@@ -57,6 +69,18 @@ gulp.task('copy-styles', function(){
         .pipe(liveReload());
 });
 
+gulp.task('copy-fonts', function(){
+    gulp.src([
+        config.assets_path + '/fonts/**/*.*'
+    ])
+        .pipe(gulp.dest(config.build_path_fonts))
+        .pipe(liveReload());
+
+    gulp.src(config.vendor_path_fonts)
+        .pipe(gulp.dest(config.build_vendor_path_fonts))
+        .pipe(liveReload());
+});
+
 gulp.task('copy-scripts', function(){
     gulp.src([
             config.assets_path + '/js/**/*.js'
@@ -75,7 +99,7 @@ gulp.task('clear-build-folder', function(){
 });
 
 gulp.task('default', ['clear-build-folder'], function(){
-    gulp.start('copy-html');
+    gulp.start('copy-html', 'copy-fonts');
     elixir(function(mix){
         mix.styles(config.vendor_path_css.concat([config.assets_path + '/css/**/*.css']),
             'public/css/all.css', config.assets_path);
@@ -87,6 +111,6 @@ gulp.task('default', ['clear-build-folder'], function(){
 
 gulp.task('watch-dev',['clear-build-folder'], function(){
     liveReload.listen();
-    gulp.start('copy-styles', 'copy-scripts', 'copy-html');
-    gulp.watch(config.assets_path + '/**', ['copy-styles','copy-scripts', 'copy-html']);
+    gulp.start('copy-styles', 'copy-scripts', 'copy-html', 'copy-fonts');
+    gulp.watch(config.assets_path + '/**', ['copy-styles','copy-scripts', 'copy-html', 'copy-fonts']);
 });

@@ -24,7 +24,7 @@ Route::post('oauth/access_token', function() {
 
 Route::group(['middleware' => 'oauth'], function(){
     // CLIENT
-    Route::resource('client', 'ClientController', ['except' => ['create', 'edit']]);
+    Route::resource('client', 'ClientController');
 
     //PROJECT
     //Route::group(['middleware'=>'CheckProjectOwner'], function() {     //no longer using middleware to check the project owner
