@@ -17,55 +17,36 @@ use LucaDegasperi\OAuth2Server\Facades\Authorizer;
 Route::get('/', function () {
     return view('app');
 });
-
 Route::post('oauth/access_token', function() {
-    return \Response::json(Authorizer::issueAccessToken());
+    return Response::json(Authorizer::issueAccessToken());
 });
-
 Route::group(['middleware' => 'oauth'], function(){
-    // CLIENT
+    Route::get('user/authenticated', 'UserController@authenticated');
     Route::resource('client', 'ClientController');
-
-    //PROJECT
-    //Route::group(['middleware'=>'CheckProjectOwner'], function() {     //no longer using middleware to check the project owner
-        Route::resource('project', 'ProjectController', ['except' => ['create', 'edit']]);
-
-        Route::get('project/{id}/member', 'ProjectController@members');
-        Route::post('project/{id}/member/{member_id}', 'ProjectController@addMember');
-        Route::delete('project/{id}/member/{member_id}', 'ProjectController@removeMember');
-        Route::get('project/{id}/task', 'ProjectController@tasks');
-        Route::post('project/{id}/task', 'ProjectController@addTask');
-        Route::delete('project/{id}/task/{task_id}', 'ProjectController@removeTask');
-    //});
-
-
-    Route::group(['prefix'=>'project'], function(){
-
-        //PROJECT NOTE
-        Route::get('{id}/note', 'ProjectNoteController@index');
+    Route::get('project/{id}', 'ProjectController@show');
+    Route::resource('project', 'ProjectController');
+    Route::resource('task', 'ProjectTaskController');
+    Route::resource('note', 'ProjectNoteController');
+    Route::group(['middleware' => 'check.project.permission' ,'prefix' => 'project'], function(){
+        Route::get('{id}/note', 'ProjectNoteController@projectNotes');
+        Route::post('{id}/note', 'ProjectNoteController@store');
         Route::get('{id}/note/{noteId}', 'ProjectNoteController@show');
-        Route::post('{id}/note/', 'ProjectNoteController@store');
         Route::put('{id}/note/{noteId}', 'ProjectNoteController@update');
         Route::delete('{id}/note/{noteId}', 'ProjectNoteController@destroy');
-
+        Route::get('{id}/task', 'ProjectTaskController@projectTasks');
+        Route::post('{id}/task', 'ProjectTaskController@store');
+        Route::get('{id}/task/{taskId}', 'ProjectTaskController@show');
+        Route::put('{id}/task/{taskId}', 'ProjectTaskController@update');
+        Route::delete('{id}/task/{taskId}', 'ProjectTaskController@destroy');
+        Route::get('{id}/member', 'ProjectController@members');
+        Route::post('{id}/member', 'ProjectController@addMember');
+        Route::get('{id}/member/{memberId}', 'ProjectController@membersShow');
+        Route::delete('{id}/member/{memberId}', 'ProjectController@removeMember');
+        Route::get('{id}/file', 'ProjectFileController@index');
+        Route::get('{id}/file/{fileId}', 'ProjectFileController@show');
+        Route::get('{id}/file/{fileId}/download', 'ProjectFileController@showFile');
         Route::post('{id}/file', 'ProjectFileController@store');
+        Route::put('{id}/file/{fileId}', 'ProjectFileController@update');
+        Route::delete('{id}/file/{fileId}', 'ProjectFileController@destroy');
     });
-
-});
-
-
-
-/*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| This route group applies the "web" middleware group to every route
-| it contains. The "web" middleware group is defined in your HTTP
-| kernel and includes session state, CSRF protection, and more.
-|
-*/
-
-Route::group(['middleware' => ['web']], function () {
-    //
 });

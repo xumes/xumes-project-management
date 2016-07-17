@@ -2,38 +2,33 @@
 
 namespace CodeProject\Repositories;
 
+use \CodeProject\Entities\ProjectTask;
+use CodeProject\Presenters\ProjectTaskPresenter;
 use Prettus\Repository\Eloquent\BaseRepository;
-use Prettus\Repository\Criteria\RequestCriteria;
-use CodeProject\Repositories\ProjectTaskRepository;
-use CodeProject\Entities\ProjectTask;
 
-/**
- * Class ProjectTaskRepositoryRepositoryEloquent
- * @package namespace CodeProject\Repositories;
- */
 class ProjectTaskRepositoryEloquent extends BaseRepository implements ProjectTaskRepository
 {
-    /**
-     * Specify Model class name
-     *
-     * @return string
-     */
-    public function model()
-    {
-        return ProjectTask::class;
-    }
-
-    /**
-     * Boot up the repository, pushing criteria
-     */
     public function boot()
     {
-        $this->pushCriteria(app(RequestCriteria::class));
+        $this->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
     }
-
-    public function validator()
+    public function Model(){
+        return ProjectTask::class;
+    }
+    public function hasMember($projectId, $memberId)
     {
-        return \CodeProject\Validators\ProjectTaskValidator::class;
+        $project = $this->find($projectId);
+        foreach($project->members as $member)
+        {
+            if ($member->id == $memberId)
+            {
+                return true;
+            }
+            return false;
+        }
     }
-
+    public function presenter()
+    {
+        return ProjectTaskPresenter::class;
+    }
 }

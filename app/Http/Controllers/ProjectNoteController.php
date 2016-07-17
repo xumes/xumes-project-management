@@ -5,60 +5,67 @@ namespace CodeProject\Http\Controllers;
 use CodeProject\Repositories\ProjectNoteRepository;
 use CodeProject\Services\ProjectNoteService;
 use Illuminate\Http\Request;
-
-
-/**
- * Class ProjectNoteController
- * @package CodeProject\Http\Controllers
- */
+use CodeProject\Http\Requests;
+use CodeProject\Http\Controllers\Controller;
+use Symfony\Component\VarDumper\Caster\ExceptionCaster;
 class ProjectNoteController extends Controller
 {
     /**
-     * @var ProjectNoteRepository
+     * @var ProjectTaskRepository
      */
     private $repository;
     /**
-     * @var ProjectNoteService
+     * @var projectnoteervice
      */
     private $service;
-
-    /**
-     * ProjectNoteController constructor.
-     * @param ProjectNoteRepository $repository
-     * @param ProjectNoteService $service
-     */
-    public function __construct(ProjectNoteRepository $repository, ProjectNoteService $service)
+    public function __construct(
+        ProjectNoteRepository $projectRepository,
+        ProjectNoteService $service)
     {
-        $this->repository=$repository;
+        $this->repository = $projectRepository;
         $this->service = $service;
     }
-
-    /**
-     * @return mixed
-     */
-    public function index($id)
+    public function index()
+    {
+        $note = $this->repository->all();
+        return response()->json($note);
+    }
+    public function store(Request $request, $id)
+    {
+        $data = $request->all();
+        $data['project_id'] = $id;
+        return $this->service->create($data);
+    }
+    public function show($id, $noteid)
+    {
+        $result = $this->repository->findWhere([
+            'project_id' => $id,
+            'id' => $noteid
+        ]);
+        if (isset($result['data']) && count($result['data']) == 1) {
+            $result = [
+                'data' => $result['data'][0]
+            ];
+        };
+        return $result;
+    }
+    public function edit($id)
+    {
+        $note = $this->repository->find($id);
+        return response()->json($note);
+    }
+    public function update(Request $request, $id, $idNote)
+    {
+        $data = $request->all();
+        $data['project_id'] = $id;
+        return $this->service->update($data, $idNote);
+    }
+    public function destroy($id, $idNote)
+    {
+        $this->repository->delete($idNote);
+    }
+    public function projectNotes($id)
     {
         return $this->repository->findWhere(['project_id' => $id]);
-    }
-
-    public function show($id, $noteId)
-    {
-        return $this->repository->findWhere(['project_id'=>$id, 'id'=>$noteId]);
-    }
-
-    public function store(Request $request)
-    {
-        return $this->service->create($request->all());
-    }
-
-    public function update(Request $request, $id, $noteId)
-    {
-
-        return $this->service->update($request->all(), $noteId);
-    }
-
-    public function destroy($id, $noteId)
-    {
-        return $this->repository->delete($noteId);
     }
 }

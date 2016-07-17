@@ -2,8 +2,10 @@
 
 namespace CodeProject\Providers;
 
+use CodeProject\Entities\ProjectTask;
+use CodeProject\Events\TaskWasIncluded;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
-
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -13,9 +15,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        ProjectTask::created(function($task){
+            Event::fire(new TaskWasIncluded($task));
+        });
     }
-
     /**
      * Register any application services.
      *

@@ -3,21 +3,15 @@
 namespace CodeProject\Entities;
 
 use Illuminate\Database\Eloquent\Model;
-use Prettus\Repository\Contracts\Transformable;
-use Prettus\Repository\Traits\TransformableTrait;
-
-class ProjectNote extends Model implements Transformable
+class ProjectNote extends Model
 {
-    use TransformableTrait;
-
+    protected $table = 'project_notes';
     protected $fillable = [
         'project_id',
-        'Title',
-        'Note'
+        'title',
+        'note'
     ];
-
-
-    public function project() {
+    public function project(){
         return $this->belongsTo(Project::class);
     }
 }

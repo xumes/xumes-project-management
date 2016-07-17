@@ -3,13 +3,19 @@
 namespace CodeProject\Entities;
 
 use Illuminate\Database\Eloquent\Model;
-use Prettus\Repository\Contracts\Transformable;
-use Prettus\Repository\Traits\TransformableTrait;
-
-class ProjectTask extends Model implements Transformable
+class ProjectTask extends Model
 {
-    use TransformableTrait;
-
-    protected $fillable = [];
-
+    protected $table = 'projects_task';
+    protected $fillable = [
+        'name',
+        'start_date',
+        'due_date',
+        'project_id',
+        'status'
+    ];
+    public $timestamps = true;
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
 }
