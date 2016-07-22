@@ -1,8 +1,8 @@
 <?php
 
-namespace CodeProject\Transformers;
+namespace App\Transformers;
 
-use CodeProject\Entities\User;
+use App\Entities\User;
 use League\Fractal\TransformerAbstract;
 
 class ProjectMemberTransformer extends TransformerAbstract
@@ -10,9 +10,9 @@ class ProjectMemberTransformer extends TransformerAbstract
     public function transform(User $member)
     {
         return [
-            'member_id' => $member->id,
-            'name' => $member->name,
-
+            'user_id'  => $member->id,
+            'name'     => $member->name
         ];
     }
+
 }

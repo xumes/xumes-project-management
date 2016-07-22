@@ -1,9 +1,10 @@
 <?php
 
-namespace CodeProject\Providers;
+namespace App\Providers;
 
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+
 class EventServiceProvider extends ServiceProvider
 {
     /**
@@ -12,10 +13,11 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'CodeProject\Events\SomeEvent' => [
-            'CodeProject\Listeners\EventListener',
+        'App\Events\SomeEvent' => [
+            'App\Listeners\EventListener',
         ],
     ];
+
     /**
      * Register any other events for your application.
      *
@@ -25,6 +27,7 @@ class EventServiceProvider extends ServiceProvider
     public function boot(DispatcherContract $events)
     {
         parent::boot($events);
+
         //
     }
 }

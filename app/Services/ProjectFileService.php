@@ -1,73 +1,81 @@
 <?php
-namespace CodeProject\Services;
-use CodeProject\Repositories\ProjectRepository;
-use CodeProject\Repositories\ProjectFileRepository;
-use CodeProject\Validators\ProjectFileValidator;
+
+namespace App\Services;
+use App\Repositories\ProjectFileRepository;
+use App\Repositories\ProjectRepository;
+use App\Validator\ProjectFileValidator;
+use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
-use Illuminate\Contracts\Filesystem\Factory as Storage;
+
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Contracts\Filesystem\Factory as Storage;
 
 class ProjectFileService
 {
     protected $repository;
     protected $projectRepository;
     protected $validator;
-    protected $storage;
-    protected $filesystem;
+    private $filesystem;
+    private $storage;
 
-    public function __construct(ProjectFileRepository $repository, ProjectRepository $projectRepository,
-                                ProjectFileValidator $validator, Storage $storage, Filesystem $filesystem)
+    public function __construct(
+        ProjectFileRepository $repository,
+        ProjectRepository $projectRepository,
+        ProjectFileValidator $validator,
+        Filesystem $filesystem,
+        Storage $storage
+    )
+
     {
-        $this->repository           = $repository;
-        $this->validator            = $validator;
-        $this->projectRepository    = $projectRepository;
-        $this->storage              = $storage;
-        $this->filesystem           = $filesystem;
+        $this->repository = $repository;
+        $this->projectRepository = $projectRepository;
+        $this->validator = $validator;
+        $this->filesystem = $filesystem;
+        $this->storage = $storage;
     }
 
     public function create(array $data)
     {
-       // dd($data);
         try{
-            $this->validator->with($data)->passesOrFail();
+            $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_CREATE);
 
             $project = $this->projectRepository->skipPresenter()->find($data['project_id']);
-           // dd($project);
             $projectFile = $project->files()->create($data);
-            $this->storage->put($projectFile->id.".".$data['extension'], $this->filesystem->get($data['file']));
+
+            $this->storage->put($projectFile->getFileName(), $this->filesystem->get($data['file']));
 
             return $projectFile;
-        }catch( ValidatorException $e){
+
+        } catch(ValidatorException $e){
             return [
-                'error'    => true,
+                'error' => true,
                 'message' => $e->getMessageBag()
             ];
         }
-        
     }
 
-    public function update(array $dados, $id)
+    public function update(array $data, $id)
     {
-         try{
-            return $this->repository->update($dados, $id);
-        }catch( ValidatorException $e){
+
+        try{
+            $this->validator->with($data)->passesOrFail(ValidatorInterface::RULE_UPDATE);
+
+            return $this->repository->update($data, $id);
+
+        } catch(ValidatorException $e){
             return [
-                'error'    => true,
+                'error' => true,
                 'message' => $e->getMessageBag()
             ];
         }
-
     }
 
-
-    public function destroy($id){
-
-        $projectFile = $this->repository->skypPresenter()->find($id)->project_id;
-        if($this->storage->exists($projectFile.id.'.'.$projectFile.extension)){
-            $this->storage->delete($projectFile.id.'.'.$projectFile.extension);
-            return $projectFile->delete();
-        }else{
-            return array('success' => false);
+    public function delete($id)
+    {
+        $projectFile = $this->repository->skipPresenter()->find($id);
+        if($this->storage->exists($projectFile->getFileName())) {
+            $this->storage->delete($projectFile->getFileName());
+            $projectFile->delete();
         }
     }
 
@@ -77,39 +85,52 @@ class ProjectFileService
         return $this->getBaseURL($projectFile);
     }
 
-    public function getBaseURL($projectFile)
+    public function getFileName($id)
     {
-        switch($this->storage->getDefaultDriver()){
-            case 'local':
-                    return $this->storage->getDrive();
-        }
+        $projectFile = $this->repository->skipPresenter()->find($id);
+        return $projectFile->getFileName();
+    }
 
-        return $this->storage->getDriver()->getAdapter()->getPathPrefix()
-            .'/'.$projectFile->id.'.'.$projectFile->extension;
+    private function getBaseURL($projectFile)
+    {
+        switch($this->storage->getDefaultDriver())
+        {
+            case 'local':
+                return $this->storage->getDriver()->getAdapter()->getPathPrefix()
+                . '/' . $projectFile->getFileName();
+        }
+    }
+
+    public function createFile(array $data)
+    {
+        $project = $this->projectRepository->skipPresenter()->find($data['project_id']);
+
+        $projectFile  = $project->files()->create($data);
+
+        $this->storage->put($projectFile->getFileName(), $this->filesystem->get($data['file']));
     }
 
     public function checkProjectOwner($projectFileId)
     {
-        $id_usu     =  \Authorizer::getResourceOwnerId();
-        $project_id =  $this->repository->skypPresenter()->find($projectFileId)->project_id;
+        $userId = \Authorizer::getResourceOwnerId();
+        $projectId = $this->repository->skipPresenter()->find($projectFileId)->project_id;
 
-        return $this->projectRepository->isOwner($project_id, $id_usu);
+        return $this->projectRepository->isOwner($projectId, $userId);
     }
 
     public function checkProjectMember($projectFileId)
     {
-        $id_usu =  \Authorizer::getResourceOwnerId();
-        $project_id =  $this->repository->skypPresenter()->find($projectFileId)->project_id;
-        return $this->projectRepository->hasMember($project_id, $id_usu);
+        $userId = \Authorizer::getResourceOwnerId();
+        $projectId = $this->repository->skipPresenter()->find($projectFileId)->project_id;
+
+        return $this->projectRepository->hasMember($projectId, $userId);
     }
 
-    public function checkProjectPermissions($projectFileid)
+    public function checkProjectPermissions($projectFileId)
     {
-        if($this->checkProjectOwner($projectFileid) || $this->checkProjectMember($projectFileid)){
+        if($this->checkProjectMember($projectFileId) or $this->checkProjectOwner($projectFileId)){
             return true;
         }
-
         return false;
     }
-
 }

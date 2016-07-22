@@ -1,14 +1,10 @@
 <?php
 
-namespace CodeProject\Repositories;
+namespace App\Repositories;
 
 use Prettus\Repository\Contracts\RepositoryInterface;
 
-/**
- * Interface ProjectFileRepository
- * @package namespace CodeProject\Repositories;
- */
 interface ProjectFileRepository extends RepositoryInterface
 {
-    //
+
 }

@@ -1,20 +1,23 @@
 <?php
 
-namespace CodeProject\Repositories;
+namespace App\Repositories;
 
-use \CodeProject\Entities\ProjectTask;
-use CodeProject\Presenters\ProjectTaskPresenter;
+use \App\Entities\ProjectTask;
+use App\Presenters\ProjectTaskPresenter;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 class ProjectTaskRepositoryEloquent extends BaseRepository implements ProjectTaskRepository
 {
+
     public function boot()
     {
         $this->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
     }
+
     public function Model(){
         return ProjectTask::class;
     }
+
     public function hasMember($projectId, $memberId)
     {
         $project = $this->find($projectId);
@@ -27,8 +30,10 @@ class ProjectTaskRepositoryEloquent extends BaseRepository implements ProjectTas
             return false;
         }
     }
+
     public function presenter()
     {
         return ProjectTaskPresenter::class;
     }
+
 }

@@ -1,50 +1,33 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: regin
- * Date: 18/01/2016
- * Time: 18:17
- */
 
-namespace CodeProject\Services;
+namespace App\Services;
 
-use CodeProject\Repositories\ProjectNoteRepository;
-use CodeProject\Validators\ProjectNoteValidator;
+use App\Repositories\ProjectNoteRepository;
+use App\Validator\ProjectNoteValidator;
 use Prettus\Validator\Exceptions\ValidatorException;
 
-
-/**
- * Class ProjectService
- * @package CodeProject\Services
- */
 class ProjectNoteService
 {
     /**
-     * @var ProjectNoteRepository
+     * @var ClientRepository
      */
     protected $repository;
+
     /**
-     * @var ProjectNoteValidator
+     * @var ProjectValidator
      */
     protected $validator;
 
-    /**
-     * ClientService constructor.
-     * @param ProjectNoteRepository $repository
-     * @param ProjectNoteValidator $validator
-     */
-    public function __construct(ProjectNoteRepository $repository, ProjectNoteValidator $validator)
-    {
+    public function __construct(ProjectNoteRepository $repository, ProjectNoteValidator $projectValidator){
         $this->repository = $repository;
-        $this->validator = $validator;
+        $this->validator = $projectValidator;
     }
 
-    public function create(array $data)
-    {
+    public function create(array $data){
         try{
             $this->validator->with($data)->passesOrFail();
             return $this->repository->create($data);
-        } catch (ValidatorException $e) {
+        } catch (ValidatorException $e){
             return [
                 'error' => true,
                 'message' => $e->getMessageBag()
@@ -53,12 +36,12 @@ class ProjectNoteService
 
     }
 
-    public function update(array $data, $id)
-    {
+    public function update(array $data, $id){
+
         try{
             $this->validator->with($data)->passesOrFail();
             return $this->repository->update($data, $id);
-        } catch (ValidatorException $e) {
+        } catch(ValidatorException $e){
             return [
                 'error' => true,
                 'message' => $e->getMessageBag()

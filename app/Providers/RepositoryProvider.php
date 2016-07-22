@@ -1,59 +1,56 @@
 <?php
 
-namespace CodeProject\Providers;
+namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryProvider extends ServiceProvider
 {
     /**
-     * Bootstrap the application services.
+     * Bootstrap any application services.
      *
      * @return void
      */
     public function boot()
     {
-        //
+
     }
 
     /**
-     * Register the application services.
+     * Register any application services.
      *
      * @return void
      */
     public function register()
     {
         $this->app->bind(
-            \CodeProject\Repositories\ClientRepository::class,
-            \CodeProject\Repositories\ClientRepositoryEloquent::class
+            \App\Repositories\ClientRepository::class,
+            \App\Repositories\ClientRepositoryEloquent::class
         );
         $this->app->bind(
-            \CodeProject\Repositories\ProjectRepository::class,
-            \CodeProject\Repositories\ProjectRepositoryEloquent::class
+            \App\Repositories\ProjectRepository::class,
+            \App\Repositories\ProjectRepositoryEloquent::class
         );
         $this->app->bind(
-            \CodeProject\Repositories\ProjectTaskRepository::class,
-            \CodeProject\Repositories\ProjectTaskRepositoryEloquent::class
+            \App\Repositories\ProjectTaskRepository::class,
+            \App\Repositories\ProjectTaskRepositoryEloquent::class
         );
         $this->app->bind(
-            \CodeProject\Repositories\ProjectNoteRepository::class,
-            \CodeProject\Repositories\ProjectNoteRepositoryEloquent::class
+            \App\Repositories\ProjectNoteRepository::class,
+            \App\Repositories\ProjectNoteRepositoryEloquent::class
         );
         $this->app->bind(
-            \CodeProject\Repositories\ProjectMemberRepository::class,
-            \CodeProject\Repositories\ProjectMemberRepositoryEloquent::class
+            \App\Repositories\ProjectMemberRepository::class,
+            \App\Repositories\ProjectMemberRepositoryEloquent::class
         );
         $this->app->bind(
-            \CodeProject\Repositories\MemberRepository::class,
-            \CodeProject\Repositories\MemberRepositoryEloquent::class
+            \App\Repositories\MemberRepository::class,
+            \App\Repositories\MemberRepositoryEloquent::class
         );
         $this->app->bind(
-            \CodeProject\Repositories\ProjectFileRepository::class,
-            \CodeProject\Repositories\ProjectFileRepositoryEloquent::class
+            \App\Repositories\ProjectFileRepository::class,
+            \App\Repositories\ProjectFileRepositoryEloquent::class
         );
-        $this->app->bind(
-            \CodeProject\Repositories\UserRepository::class,
-            \CodeProject\Repositories\UserRepositoryEloquent::class
-        );
+
     }
 }

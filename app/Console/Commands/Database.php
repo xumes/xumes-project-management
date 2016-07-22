@@ -1,6 +1,6 @@
 <?php
 
-namespace CodeProject\Console\Commands;
+namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
@@ -13,12 +13,14 @@ class Database extends Command
      * @var string
      */
     protected $signature = 'make:database';
+
     /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Create database based on environment variables';
+
     /**
      * Create a new command instance.
      *
@@ -28,6 +30,7 @@ class Database extends Command
     {
         parent::__construct();
     }
+
     /**
      * Execute the console command.
      *
@@ -41,10 +44,11 @@ class Database extends Command
         $host = env('db_host');
         $driver = Config::get('database.default');
         $this->info($driver);
+
         switch($driver){
             case 'mysql':
             case 'pgsql':
-                $dsn = "{$driver}:host={$host};";
+            $dsn = "{$driver}:host={$host};";
                 break;
             case 'sqlsrv':
                 $dsn = "{$driver}:server={$host};";
@@ -61,6 +65,7 @@ class Database extends Command
                 $this->error("Invalid database driver:{drivers}");
                 $driver = 'sqlite';
         }
+
         if($driver !== 'sqlite'){
             try{
                 $conn = new \PDO($dsn, $user, $pass,[
@@ -73,5 +78,6 @@ class Database extends Command
                 $this->error($ex->getMessage());
             }
         }
+
     }
 }

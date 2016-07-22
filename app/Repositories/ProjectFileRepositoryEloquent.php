@@ -1,9 +1,9 @@
 <?php
 
-namespace CodeProject\Repositories;
+namespace App\Repositories;
 
-use \CodeProject\Entities\ProjectFile;
-use CodeProject\Presenters\ProjectFilePresenter;
+use \App\Entities\ProjectFile;
+use App\Presenters\ProjectFilePresenter;
 use Prettus\Repository\Eloquent\BaseRepository;
 
 class ProjectFileRepositoryEloquent extends BaseRepository implements ProjectFileRepository
@@ -11,8 +11,10 @@ class ProjectFileRepositoryEloquent extends BaseRepository implements ProjectFil
     public function Model(){
         return ProjectFile::class;
     }
+
     public function presenter()
     {
         return ProjectFilePresenter::class;
     }
+
 }
