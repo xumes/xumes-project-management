@@ -11,7 +11,11 @@
 |
 */
 
-$factory->define(CodeProject\Entities\User::class, function (Faker\Generator $faker) {
+/**
+ * Factory
+ */
+
+$factory->define(App\Entities\User::class, function ($faker) {
     return [
         'name' => $faker->name,
         'email' => $faker->email,
@@ -20,52 +24,51 @@ $factory->define(CodeProject\Entities\User::class, function (Faker\Generator $fa
     ];
 });
 
-
-$factory->define(CodeProject\Entities\Client::class, function (Faker\Generator $faker) {
+$factory->define(App\Entities\Client::class, function ($faker) {
     return [
-        'name' => $faker->name,
+        'name'          => $faker->name,
         'responsible' => $faker->name,
-        'email' => $faker->email,
-        'phone' => $faker->phoneNumber,
-        'address' => $faker->address,
-        'obs' => $faker->sentence
+        'phone'         => $faker->phoneNumber,
+        'email'         => $faker->email,
+        'address'       => $faker->address,
+        'obs'           => $faker->sentence
     ];
 });
 
-$factory->define(CodeProject\Entities\Project::class, function (Faker\Generator $faker) {
+
+$factory->define(App\Entities\Project::class, function ($faker) {
     return [
-        'owner_id' => rand(1, 50),
-        'client_id' => rand(1, 50),
-        'name' => $faker->word,
+        'owner_id'    => rand(1,5),
+        'client_id'   => rand(1,5),
+        'name'        => $faker->name,
         'description' => $faker->sentence,
-        'progress' => rand(1, 100),
-        'status' => rand(1, 3),
-        'due_date' => $faker->dateTime('now')
+        'progress'    => rand(1,10),
+        'status'      => rand(1,3),
+        'due_date'    => $faker->date($format = 'Y-m-d', $max = 'now')
     ];
 });
 
-$factory->define(CodeProject\Entities\ProjectNote::class, function (Faker\Generator $faker) {
+$factory->define(App\Entities\ProjectTask::class, function ($faker) {
     return [
-        'project_id' => rand(1, 50),
-        'Title' => $faker->word,
-        'Note' => $faker->paragraph
+        'name'        => $faker->name,
+        'project_id'  => rand(1,10),
+        'start_date'  => $faker->dateTime($max = 'now'),
+        'due_date'    => $faker->dateTime($max = 'now'),
+        'status'      => 1,
     ];
 });
 
-$factory->define(CodeProject\Entities\ProjectNote::class, function (Faker\Generator $faker) {
+$factory->define(App\Entities\ProjectNote::class, function ($faker) {
     return [
-        'project_id' => rand(1, 50),
-        'Title' => $faker->word,
-        'Note' => $faker->paragraph
+        'project_id'  => rand(1,10),
+        'title'       => $faker->word,
+        'note'        => $faker->sentence,
     ];
 });
 
-$factory->define(CodeProject\Entities\ProjectTask::class, function (Faker\Generator $faker) {
+$factory->define(App\Entities\ProjectMembers::class, function ($faker) {
     return [
-        'project_id' => rand(1,10),
-        'name' => $faker->name,
-        'start_date' => $faker->dateTime('now'),
-        'due_date' => $faker->dateTime(),
-        'status' => rand(1, 3),
+        'project_id' => rand(1,30),
+        'user_id'    => rand(1,20),
     ];
 });

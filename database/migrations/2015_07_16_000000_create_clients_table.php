@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProjectNotesTable extends Migration
+class CreateClientsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,12 +12,14 @@ class CreateProjectNotesTable extends Migration
      */
     public function up()
     {
-        Schema::create('project_notes', function (Blueprint $table) {
+        Schema::create('clients', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('project_id')->unsigned();
-            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
-            $table->string('Title');
-            $table->text('Note');
+            $table->string('name');
+            $table->string('responsible');
+            $table->string('phone');
+            $table->string('email');
+            $table->text('address');
+            $table->text('obs');
             $table->timestamps();
         });
     }
@@ -29,6 +31,6 @@ class CreateProjectNotesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('project_notes');
+        Schema::drop('clients');
     }
 }
